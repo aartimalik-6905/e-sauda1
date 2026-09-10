@@ -1,0 +1,394 @@
+[33mcommit 3b828e707bb9e3bb982dcdc166329401343cc727[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Sep 8 17:21:30 2026 +0530
+
+    fixed 5b error and seeing other tasks
+
+[33mcommit 43a174a20e4cd34e41ff252ce438de6d27c48105[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Sep 5 16:41:37 2026 +0530
+
+    Add standalone Reels button to navbar for easier access to Explore
+
+[33mcommit dccbedea231b5f46a0c4a15926ea5c47392d4809[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Sep 5 16:17:59 2026 +0530
+
+    Fix nested-folder bug: merge the 6 lost features into the real source
+
+[33mcommit 76697f1e6c6de3458d91021b69a2eabe8ef6b239[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Fri Sep 4 17:54:46 2026 +0530
+
+    changes
+
+[33mcommit edb3fa3e6a92a5234b4b8dbb6a0e532a7eeb3439[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Fri Sep 4 15:43:02 2026 +0530
+
+    6 features
+
+[33mcommit b927f9a748f3d86393643ac2264e58ae843cc7ff[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Sat Aug 22 20:30:56 2026 +0530
+
+    ui updates, animations and transitions added
+
+[33mcommit 9e7ca7f535bd4dad2490254e877104766d878540[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Fri Aug 21 00:36:53 2026 +0530
+
+    ui changes - add framer motion
+
+[33mcommit 8e242d3e52994660ed08af77ecd4d1a3923daa97[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Wed Aug 19 09:24:22 2026 +0530
+
+    removed phone otp verification
+
+[33mcommit 190a34714bbe5990bb90b6e8e05be01636d7d8bc[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Fri Aug 14 10:36:54 2026 +0530
+
+    Remove accidental nested duplicate folder
+
+[33mcommit dc97726dcec0db681c8392e6070909b855751103[m
+Merge: aac3f4f 979460b
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Fri Aug 14 10:30:31 2026 +0530
+
+    Merge branch 'main' of https://github.com/aartimalik-6905/e-sauda1
+
+[33mcommit aac3f4f596ac488c17fd2796332ee6a70393e0e1[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Fri Aug 14 10:26:37 2026 +0530
+
+    Fix signup 401, duplicate-email detection, broken nav links
+
+[33mcommit 979460bfccde36f28412c82d324127a44a1382b6[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Thu Aug 13 14:16:56 2026 +0530
+
+    some
+
+[33mcommit 0b5d3e3856b7e36d96a25d213477972bab2f94f1[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Aug 11 10:15:49 2026 +0530
+
+    fixed some changes
+
+[33mcommit 6d1bd1775dc8b0ea9f83056002a05037cdda4067[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Aug 8 11:59:14 2026 +0530
+
+    blr to del
+
+[33mcommit a45c46877646a0c6f49853267bc29af96a5dc93a[m[33m ([m[1;31morigin/voice-ar-removal-location-video-fix[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Sun Aug 2 20:25:40 2026 +0530
+
+    Remove voice and AR features, add mandatory location + video to Sell wizard, fix Browse city filter
+
+[33mcommit 6706389d8420e804d40fc3ee2edf4191fd278c3d[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 29 10:14:49 2026 +0530
+
+    3 things-otp,vdo and email fixed
+
+[33mcommit f897305faaf38fe253125781e29172be1b6a7608[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 26 11:20:02 2026 +0530
+
+    a bit more smarter ai bot
+
+[33mcommit 95795b3cd6a6a83a290a661646e7b3dc6183cda4[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 26 11:11:38 2026 +0530
+
+    chatbot fixed-trying more,razaorpay working,recomm testing,still left-otp and vdo tetsing
+
+[33mcommit c9330388ea7381fff3da6ade2abfd4994ba6e8a1[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Fri Jul 24 02:00:48 2026 +0530
+
+    Negotiation pricing — buyer proposes a price inline in chat, seller accepts/declines, and the accepted amount is what Razorpay actually charges (re-derived server-side in both the order-creation and payment-verification edge functions — not trusted from the client).
+    
+    Mandatory mobile OTP — signup now requires a phone number; a /verify-phone gate blocks the rest of the app until the code is confirmed. SMS sending itself is mocked (no provider wired up) — the code is shown directly on-screen for testing, clearly flagged in the doc so it doesn't accidentally ship that way.
+    
+    Sharper recommendations — added a second, more specific matching layer (scooty → scooter cover/cleaner, shirt → trousers/belt/shoes/buttons, etc.) on top of the existing category-level system, easy to extend with more entries.
+    
+    Chatbot — floating widget, real Anthropic API call (not scripted), grounded every message in your actual listings/orders/sales pulled server-side, for both buyer and seller questions.
+
+[33mcommit bfe4e9d50196dc9568087afb6a9d1ce6dc69bf30[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Thu Jul 23 14:00:44 2026 +0530
+
+    fix critical payment gap; add QR-code AR, Open Graph tags, PDF receipts
+
+[33mcommit 7829dfb4524c90de3d9dfd8b8debb72610bcc98c[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Wed Jul 22 13:22:11 2026 +0530
+
+    fixed error in listing.ts
+
+[33mcommit 918f9e84f2fe9230f4f062f2b10a668e06f79a03[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 22 12:20:18 2026 +0530
+
+    Initial commit: e-sauda marketplace app
+
+[33mcommit fc151fb4500710ba4d24f0a317e2386aa7079e60[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 22 09:34:50 2026 +0530
+
+    dark mode,Meetup scheduling + Uber deep-link
+    ✅ Mandatory product video
+    ✅ Light/dark theme
+    ✅ Real listing-fee charging
+    ✅ Account deletion
+
+[33mcommit 994eb429ac014fc6f6dddf6314fc61563abafe1e[m[33m ([m[1;31morigin/feature/ar-market-grade[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Tue Jul 21 09:20:09 2026 +0530
+
+    Upgrade AR size preview: texture box faces with real listing photos
+
+[33mcommit f8a7835d4136eee738b07f98f31e882c34ef5705[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Jul 21 02:05:42 2026 +0530
+
+    Add meetup scheduling with real Uber deep-link ride booking
+
+[33mcommit 9981aaab8159f56944b4579a91c891936b022be4[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Mon Jul 20 13:12:56 2026 +0530
+
+    add AR/size-check viewer (client-side)
+
+[33mcommit d25c746281ba4f917b2d33fc04e0832f439397b3[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 19 23:12:32 2026 +0530
+
+    Add legal/compliance pages for Razorpay activation; fix overclaiming footer copy
+
+[33mcommit c2632a33dff933278ad3c1bbbf74ee1d70bfa588[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 19 17:19:54 2026 +0530
+
+    razorpay testing not real
+
+[33mcommit 34a4ba860de437c97c1f280d3c60c4ed360031b7[m[33m ([m[1;31morigin/feature/edit-listing-photos[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Sun Jul 19 10:51:17 2026 +0530
+
+    Add photo management (add/remove) to Edit Listing; fix an upload index-collision bug
+
+[33mcommit c35276eb6d022660d0872916e5706cfafad2e545[m[33m ([m[1;31morigin/feature/mark-as-sold[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Sun Jul 19 10:06:03 2026 +0530
+
+    Wire up mark-as-sold and relist on My Listings
+
+[33mcommit df07d0b191e371e64b3a3d7cf3906addac13bb4e[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Jul 18 13:23:42 2026 +0530
+
+    Add forgot-password flow and price-drop alerts for saved items
+
+[33mcommit 4502781b17f37c5fd976920f9bf320fe19160527[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Jul 18 13:17:03 2026 +0530
+
+    Add My Listings management page and reporter notifications
+
+[33mcommit 4d28920f0e362e31f2861d6a07315e0d63d90fe0[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Jul 18 12:34:19 2026 +0530
+
+    Add admin moderation actions (suspend/remove) and user blocking
+
+[33mcommit f7a32f0937bf10a0e10832fda63fbc394f142f6e[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Fri Jul 17 00:51:01 2026 +0530
+
+    Fix cancel_vault_order: composite-row IS NOT NULL bug prevented fee deduction
+
+[33mcommit 21423b50d927b4265d937dbe3138e6dffee4ca17[m[33m ([m[1;31morigin/feature/dispute-fee[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Thu Jul 16 14:30:25 2026 +0530
+
+    Add dispute logistics-fee deduction on Vault order cancellation
+
+[33mcommit df367dffa7dffc3db0054fb41a0ea07f07f0c4d4[m[33m ([m[1;31morigin/feature/contextual-recommendations[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Thu Jul 16 13:53:15 2026 +0530
+
+    Add contextual complementary-item recommendations to listing detail
+
+[33mcommit 6848974699ecd0b2c1b8c36f3183a0a8ee0c7395[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 15 22:01:54 2026 +0530
+
+    notf fixed
+
+[33mcommit 9739a5ee591999f0bd067ee69924da140de24ba2[m[33m ([m[1;31morigin/feature/smart-pricing[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Wed Jul 15 20:54:15 2026 +0530
+
+    Add smart pricing suggestion to Sell wizard
+
+[33mcommit 86d7db9625d5c55623ea8cee114e3d313f3b1497[m[33m ([m[1;31morigin/feature/chat-moderation[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Wed Jul 15 16:00:40 2026 +0530
+
+    Add pattern-based in-chat scam moderation + re-fix vite pin regression
+
+[33mcommit 9bdc576d2aec7f3d1a714035e28965bfdaaafdb0[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 15 10:27:18 2026 +0530
+
+    Add admin reports review page (is_admin flag + RLS + /admin UI)
+
+[33mcommit c870f7cded0b2ddccd8bf11a00c1c50f0d51555d[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 15 10:16:33 2026 +0530
+
+    Add listing editing and a report/flag system for listings and users
+
+[33mcommit 410d2520386309c413859beacabeffbb1f41cc4e[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 15 10:00:12 2026 +0530
+
+    search and auth fixed with name showing
+
+[33mcommit fc78254a9d4216c0d090491d2a46859855871c95[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Wed Jul 15 09:45:11 2026 +0530
+
+    Add free-text search across title/description/sub-category, wired into Browse + navbar
+
+[33mcommit 162caa20c5da69750414c2b0c19700e99b64e173[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Jul 14 17:41:25 2026 +0530
+
+    Add in-app notifications: bell dropdown for new messages + vault status changes
+
+[33mcommit 16a8a44dea3726f526e2db3846fb29a2afe7b4ce[m[33m ([m[1;31morigin/feature/saved-items[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Tue Jul 14 16:06:44 2026 +0530
+
+    Add persistent saved/wishlist items
+
+[33mcommit d6157f77a4f4ecb4e83b55c7f025ffa0678373c8[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Mon Jul 13 15:01:14 2026 +0530
+
+    Add mock delivery arrangement to the Vault buying/selling flow
+
+[33mcommit 558d5b796baa8ad86f642de170380d54ff6cb23d[m[33m ([m[1;31morigin/feature/seller-profile[m[33m, [m[1;31morigin/feature/delivery[m[33m, [m[1;32mfeature/seller-profile[m[33m, [m[1;32mfeature/delivery[m[33m)[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Mon Jul 13 14:31:49 2026 +0530
+
+    Add public seller profile page
+
+[33mcommit 39e7e0d8b572594e01eef7473fb62d504a2891c7[m[33m ([m[1;31morigin/feature/ratings[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Sun Jul 12 18:17:38 2026 +0530
+
+    Fix broken main (unresolved merge conflicts + duplicate code + vite pin) and add ratings feature
+
+[33mcommit c8820b95bdda6b4ff16f35c4aef537528fa7aef8[m
+Merge: 9e49489 0a30af0
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 12 09:46:57 2026 +0530
+
+    Merge origin/main into main
+
+[33mcommit 9e49489985cfe81af22465844c1f695801af210c[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Fri Jul 10 18:33:03 2026 +0530
+
+    packge lock json
+
+[33mcommit 0a30af017f812c6fa4bccbb0e69c7de047731d7b[m[33m ([m[1;31morigin/feature/escrow-vault[m[33m, [m[1;32mfeature/escrow-vault[m[33m)[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sat Jul 11 14:54:56 2026 +0530
+
+    Add real escrow vault flow: buy, OTP handover, cancel
+
+[33mcommit be00784474e25abeaec6add4539618dfcdff0d69[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Fri Jul 10 18:33:03 2026 +0530
+
+    packge lock json
+
+[33mcommit 20e3f3d275596038e0d2d2ce4bc8f6308eec691e[m[33m ([m[1;31morigin/feature/chat-messaging[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Wed Jul 8 09:38:15 2026 +0530
+
+    Add listing detail page and real-time buyer/seller chat
+
+[33mcommit a68272d78d4057a170583003961b952ed1195c8c[m[33m ([m[1;31morigin/feature/image-upload[m[33m, [m[1;32mfeature/image-upload[m[33m)[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Jul 7 11:08:29 2026 +0530
+
+    Add real photo upload to Supabase Storage
+
+[33mcommit b4e22086388f4ac42046708ef264fd2cc0271690[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Jul 7 10:41:58 2026 +0530
+
+    Regenerate package-lock.json after merge
+
+[33mcommit 6e4565d62ffe08b7dda82f9462f608ef6c8d2620[m
+Merge: 3acb758 91655aa
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Tue Jul 7 10:41:44 2026 +0530
+
+    Merge branch 'feature/listings-db'
+    
+    # Conflicts:
+    #       package-lock.json
+    #       src/data/listings.ts
+    #       src/pages/Browse.tsx
+    #       src/pages/Home.tsx
+    #       src/pages/Orders.tsx
+    #       src/pages/Profile.tsx
+    #       src/pages/Sell.tsx
+    #       src/types.ts
+
+[33mcommit 3acb7583311ff56f583e22c897994ee25553c012[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 5 19:25:04 2026 +0530
+
+    Add Supabase auth: signup, login, protected routes
+
+[33mcommit 3c51f02052c905e35a42cdd62886fa6ffeeae11d[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 5 18:51:13 2026 +0530
+
+    Initial UI: home, browse, sell, orders, vault, profile
+
+[33mcommit 91655aa5329878ccb124d287b063caae1d585fdb[m[33m ([m[1;31morigin/feature/listings-db[m[33m, [m[1;32mfeature/listings-db[m[33m)[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Mon Jul 6 17:39:39 2026 +0530
+
+    Implement listings database feature
+
+[33mcommit 6b6f7070151671cff1299326b096bde4a4cf0ab2[m[33m ([m[1;31morigin/feature/auth[m[33m, [m[1;32mfeature/auth[m[33m)[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 5 19:25:04 2026 +0530
+
+    Add Supabase auth: signup, login, protected routes
+
+[33mcommit c6c57f37e93ae23d0d44ceb170b3943052cc2e27[m
+Author: aarti <malikaarti6905@gmail.com>
+Date:   Sun Jul 5 18:51:13 2026 +0530
+
+    Initial UI: home, browse, sell, orders, vault, profile
+
+[33mcommit b6919abb61cd4931f9bb996b714447bf673bc847[m
+Author: Anshu Yadav <annuanshu2005@gmail.com>
+Date:   Thu Jul 2 18:08:47 2026 +0530
+
+    for forking purpose

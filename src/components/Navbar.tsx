@@ -40,9 +40,17 @@ export default function Navbar() {
   }
 
   async function handleSignOut() {
-    await signOut()
+    // Close the menu and navigate away from any auth-gated page *first* -- signOut()
+    // now clears local state synchronously-ish (see AuthContext), but there's no
+    // reason to make either of these wait on it regardless. Going straight to
+    // /login (not '/') also skips an unnecessary extra redirect hop, since '/' itself
+    // requires auth and would otherwise immediately bounce to /login anyway.
     setMenuOpen(false)
-    navigate('/')
+    try {
+      await signOut()
+    } finally {
+      navigate('/login', { replace: true })
+    }
   }
 
   const initial = (profile?.display_name || user?.email || 'Y').charAt(0).toUpperCase()

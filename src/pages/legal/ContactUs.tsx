@@ -13,7 +13,7 @@ export default function ContactUs() {
       <p>edotsauda@gmail.com -- we aim to respond within 2 business days.</p>
 
       <h2>Phone</h2>
-      <p>9817116312 -- available [Mon-Sat, 10am-6pm IST].</p>
+      <p>9817116312 -- available Mon-Sat, 10am-6pm IST.</p>
 
       <h2>Registered address</h2>
       <p>GPRA TYPE-2 QUARTERS, SAROJINI NAGAR</p>
@@ -28,9 +28,10 @@ export default function ContactUs() {
 
       <h2>For payment issues</h2>
       <p>
-        Payments are processed by Razorpay. If a payment was deducted but doesn't
-        show as completed in your e-Sauda order, contact us at edotsauda@gmail.com
-        with your order ID and approximate payment time, and we'll look into it.
+        Payments are processed by our third-party payment gateway partner. If a
+        payment was deducted but doesn't show as completed in your e-Sauda order,
+        contact us at edotsauda@gmail.com with your order ID and approximate payment
+        time, and we'll look into it.
       </p>
     </LegalLayout>
   )

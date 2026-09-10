@@ -10,19 +10,21 @@ export default function Pricing() {
 
       <h2>Posting a listing</h2>
       <p>
-        Posting a listing is currently free. The Sell flow displays an "anti-bot fee"
-        figure that scales with how many active listings you already have in a
-        category -- this is a planned anti-spam measure and is not currently charged
-        to your payment method; no real payment is collected when you publish a
-        listing today.
+        Posting your first active listing in a category costs a ₹1 anti-bot listing
+        fee, charged through our payment gateway partner before the listing goes
+        live. This fee increases the more active listings you already have in that
+        same category at the time of posting -- ₹10 for a second, ₹25 for a third or
+        beyond -- as a deterrent against bulk/bot-style relisting, not a revenue
+        feature. It resets per category as your listings there sell, expire, or are
+        removed.
       </p>
 
       <h2>Buying a listing (Sauda Vault)</h2>
       <p>
         When you buy a listing through Sauda Vault, you pay exactly the listed price
-        shown on the listing -- in Indian Rupees (INR) -- via Razorpay. e-Sauda does
-        not currently add any platform commission, service fee, or payment-processing
-        surcharge on top of the listed price.
+        shown on the listing -- in Indian Rupees (INR) -- through our payment gateway
+        partner. e-Sauda does not currently add any platform commission, service fee,
+        or payment-processing surcharge on top of the listed price.
       </p>
 
       <h2>Delivery fees</h2>
@@ -36,14 +38,16 @@ export default function Pricing() {
       <p>
         If a Vault order is cancelled before handover, you're refunded in full, minus
         any delivery fee already incurred for that specific order. See our
-        Cancellation and Refunds Policy for the full timeline.
+        Cancellation and Refunds Policy for the full timeline. The ₹1-₹25 anti-bot
+        listing fee is not refundable once a listing has been published, since it
+        covers the act of posting itself rather than the sale.
       </p>
 
       <h2>Changes to pricing</h2>
       <p>
-        If e-Sauda introduces any new fee (including activating the anti-bot listing
-        fee mentioned above), this page will be updated in advance, and the change
-        will be clearly shown in the relevant part of the app before you're charged.
+        If e-Sauda introduces or changes any fee described on this page, this page
+        will be updated in advance, and the change will be clearly shown in the
+        relevant part of the app before you're charged.
       </p>
 
       <h2>Contact</h2>

@@ -2,7 +2,8 @@ import LegalLayout from '../../components/LegalLayout'
 
 // PLACEHOLDER fields (marked clearly below) need your real details filled in before
 // this goes live -- legal name, registered address, and support contact must match
-// what you gave Razorpay during KYC, or the mismatch can hold up your website/app
+// what you give your payment processor during KYC (Razorpay today; PayU once that
+// verification is complete), or the mismatch can hold up your website/app
 // activation step.
 export default function Terms() {
   return (

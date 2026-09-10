@@ -10,9 +10,19 @@
 // (never trusted from the client) and folds a compact summary of that real data into
 // the system prompt, so answers like "what's the status of my order" or "what did I
 // list my scooter for" are answered from the database, not guessed by the model.
+//
+// Model: overridable via a GROQ_MODEL secret (supabase secrets set GROQ_MODEL=...)
+// so a future Groq deprecation is a one-line secret update, not a code change +
+// redeploy. Defaults to openai/gpt-oss-120b -- Groq's own recommended replacement
+// for llama-3.3-70b-versatile, which they decommissioned on 2026-08-16 (see
+// https://console.groq.com/docs/deprecations). If the chatbot ever starts failing
+// every request again, check that page first for a newer deprecation before
+// assuming the bug is anywhere in this file.
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
+
+const GROQ_MODEL = Deno.env.get('GROQ_MODEL') || 'openai/gpt-oss-120b'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -155,9 +165,9 @@ unless one of the above lists actually contains one.
         Authorization: `Bearer ${Deno.env.get('GROQ_API_KEY')!}`,
       },
       body: JSON.stringify({
-        // Free-tier model on Groq as of writing -- check console.groq.com/docs/models
-        // if this ever gets deprecated and swap the name here, nothing else changes.
-        model: 'llama-3.3-70b-versatile',
+        // See the GROQ_MODEL comment at the top of this file if this ever needs
+        // to change -- it's a secret override, not a hardcoded value to hunt down.
+        model: GROQ_MODEL,
         max_tokens: 500,
         // OpenAI-style chat format: the system prompt is just another message with
         // role 'system', not a separate top-level field like Anthropic's API.
@@ -168,10 +178,18 @@ unless one of the above lists actually contains one.
     const data = await groqRes.json()
     if (!groqRes.ok) {
       console.error('Groq API error:', data)
-      return new Response(JSON.stringify({ error: 'Assistant is unavailable right now.' }), {
-        status: 502,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return new Response(
+        JSON.stringify({
+          error:
+            data?.error?.code === 'model_decommissioned'
+              ? 'The assistant needs a configuration update (its model was retired by the provider). This has been logged.'
+              : 'Assistant is unavailable right now.',
+        }),
+        {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     const reply = data.choices?.[0]?.message?.content ?? ''

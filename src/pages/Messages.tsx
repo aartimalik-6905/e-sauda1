@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, MessageSquare, AlertTriangle, Ban, ShieldOff, IndianRupee, Check, X, Sparkles } from 'lucide-react'
+import { Send, MessageSquare, AlertTriangle, Ban, ShieldOff, IndianRupee, Check, X, Sparkles, ExternalLink } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import {
   fetchConversations,
@@ -380,17 +380,22 @@ export default function Messages() {
                   )}
                   <button
                     onClick={() => navigate(`/messages/${c.id}`)}
-                    className={`flex w-full items-center gap-3 p-4 text-left transition-colors duration-150 hover:bg-cream-dark ${
+                    className={`group flex w-full items-center gap-3 p-4 text-left transition-colors duration-150 hover:bg-cream-dark ${
                       c.id === activeId ? 'bg-cream-dark' : ''
                     }`}
                   >
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-clay/25 to-forest/25 text-xl">
+                    <Link
+                      to={`/listing/${c.listingId}`}
+                      onClick={(e) => e.stopPropagation()}
+                      title="Go to listing"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-clay/25 to-forest/25 text-xl ring-clay/40 transition hover:ring-2"
+                    >
                       {c.listingPhotoUrl ? (
                         <img src={c.listingPhotoUrl} alt="" className="h-full w-full object-cover" />
                       ) : (
                         c.listingEmoji
                       )}
-                    </span>
+                    </Link>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center justify-between gap-2">
                         <span className="truncate text-sm font-semibold text-ink">{c.listingTitle}</span>
@@ -425,22 +430,47 @@ export default function Messages() {
           ) : (
             <>
               {activeConversation && (
-                <div className="flex items-center justify-between border-b border-line/5 p-4">
-                  <div>
-                    <p className="text-sm font-semibold text-ink">{activeConversation.listingTitle}</p>
-                    <p className="text-xs text-ink/50">₹{activeConversation.listingPrice.toLocaleString('en-IN')}</p>
-                  </div>
-                  <button
-                    onClick={handleToggleBlock}
-                    disabled={blockActing}
-                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold disabled:opacity-50 ${
-                      isBlocked
-                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
-                        : 'border-line/10 bg-surface text-ink/60 hover:bg-cream-dark'
-                    }`}
-                  >
-                    <Ban size={13} /> {isBlocked ? 'Unblock' : 'Block'}
-                  </button>
+                <div className="flex items-center justify-between gap-3 border-b border-line/5 p-4">
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-clay/25 to-forest/25 text-lg">
+                      {activeConversation.listingPhotoUrl ? (
+                        <img
+                          src={activeConversation.listingPhotoUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        activeConversation.listingEmoji
+                      )}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold text-ink">
+                        {activeConversation.listingTitle}
+                      </span>
+                      <span className="block text-xs text-ink/50">
+                        ₹{activeConversation.listingPrice.toLocaleString('en-IN')}
+                      </span>
+                    </span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-2">
+                    <Link
+                      to={`/listing/${activeConversation.listingId}`}
+                      className="flex items-center gap-1.5 rounded-full border border-line/10 bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-cream-dark"
+                    >
+                      <ExternalLink size={13} /> View listing
+                    </Link>
+                    <button
+                      onClick={handleToggleBlock}
+                      disabled={blockActing}
+                      className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold disabled:opacity-50 ${
+                        isBlocked
+                          ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+                          : 'border-line/10 bg-surface text-ink/60 hover:bg-cream-dark'
+                      }`}
+                    >
+                      <Ban size={13} /> {isBlocked ? 'Unblock' : 'Block'}
+                    </button>
+                  </span>
                 </div>
               )}
 

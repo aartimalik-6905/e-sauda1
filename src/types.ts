@@ -142,6 +142,15 @@ export interface VaultOrder {
   listingTitle?: string
   listingEmoji?: string
   listingPhotoUrl?: string | null
+  // Area/city text from the listing itself (e.g. "Rohini, Delhi") -- not the
+  // handover meetup spot, which is a separate, more specific location. Used on the
+  // receipt/transaction report so it shows where the item was listed from, not just
+  // its name and price.
+  listingLocation?: string | null
+  // True when the listing is genuinely gone from view (moderator-removed, or its
+  // live row is otherwise unavailable) -- false for the ordinary 'sold' end state,
+  // so the UI can tell "this sold fine" apart from "this got taken down".
+  listingRemoved?: boolean
 }
 
 export interface VaultOrderWithOtp extends VaultOrder {

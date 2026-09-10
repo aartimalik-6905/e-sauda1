@@ -9,6 +9,8 @@ import { payWithRazorpay } from '../lib/razorpay'
 import { fetchMyAcceptedOffer } from '../lib/chatOffers'
 import { useAuth } from '../context/AuthContext'
 import { useSavedListings } from '../hooks/useSavedListings'
+import { useUserLocation } from '../hooks/useUserLocation'
+import { haversineKm, formatDistanceKm } from '../lib/distance'
 import { Listing, VaultOrderWithOtp, ChatOffer } from '../types'
 import ReportButton from '../components/ReportButton'
 import ListingCard from '../components/ListingCard'
@@ -75,6 +77,14 @@ export default function ListingDetail() {
   }, [listing?.id, listing?.category])
 
   const isOwner = !!user && !!listing && user.id === listing.ownerId
+
+  // Same real-distance computation as ListingCard -- see its comment for why this
+  // replaces the always-0 distanceKm field instead of just reading it.
+  const { coords: myCoords } = useUserLocation()
+  const distanceLabel =
+    myCoords && listing?.latitude != null && listing?.longitude != null
+      ? formatDistanceKm(haversineKm(myCoords, { lat: listing.latitude, lng: listing.longitude }))
+      : null
 
   async function handleChat() {
     if (!user) {
@@ -213,7 +223,10 @@ export default function ListingDetail() {
           </p>
 
           <p className="mt-3 flex items-center gap-1 text-sm text-ink/60">
-            <MapPin size={14} /> {listing.location || listing.city || 'Location not set'} · {listing.distanceKm}km away
+            <MapPin size={14} /> {listing.location || listing.city || 'Location not set'}
+            {distanceLabel
+              ? ` · ${distanceLabel} away`
+              : !isOwner && ' · Enable location access to see distance'}
           </p>
           {listing.latitude !== null && listing.longitude !== null && (
             <div className="mt-3">

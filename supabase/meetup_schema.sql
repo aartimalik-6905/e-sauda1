@@ -26,6 +26,7 @@ alter table public.meetups enable row level security;
 
 -- Scoped to the buyer/seller of the referenced order, same pattern as vault_orders
 -- itself -- nobody else can see or touch a meetup they're not part of.
+drop policy if exists "Buyer and seller can view their meetup" on public.meetups;
 create policy "Buyer and seller can view their meetup"
   on public.meetups for select
   using (
@@ -35,6 +36,7 @@ create policy "Buyer and seller can view their meetup"
     )
   );
 
+drop policy if exists "Buyer and seller can propose or update their meetup" on public.meetups;
 create policy "Buyer and seller can propose or update their meetup"
   on public.meetups for insert
   with check (
@@ -45,6 +47,7 @@ create policy "Buyer and seller can propose or update their meetup"
     )
   );
 
+drop policy if exists "Buyer and seller can change their meetup status" on public.meetups;
 create policy "Buyer and seller can change their meetup status"
   on public.meetups for update
   using (
@@ -56,6 +59,19 @@ create policy "Buyer and seller can change their meetup status"
 
 -- Notify whichever party didn't just make the change -- same "notify the other side"
 -- pattern as notify_new_message in notifications_schema.sql.
+--
+-- IMPORTANT: this constraint is shared with price_drop_alerts_schema.sql and
+-- report_notify_schema.sql, each of which also drops-and-recreates it. A plain
+-- `add constraint` fully replaces the previous list rather than merging with it, so
+-- whichever of these three files runs *last* silently wins and narrows it back down
+-- to only the types *it* knows about -- if this file runs first and one of the
+-- other two runs after it, meetup notifications start failing a check constraint
+-- violation (surfaces as a 400 on the meetups insert/update, since the trigger's
+-- insert into notifications is part of the same transaction). All three files now
+-- declare this same full, canonical list rather than their own partial one, so
+-- running them in any order is safe. If you already hit this, also run
+-- notifications_type_check_fix.sql once to correct it immediately on your project
+-- without needing to re-run all three.
 alter table public.notifications drop constraint if exists notifications_type_check;
 alter table public.notifications add constraint notifications_type_check check (
   type in (
