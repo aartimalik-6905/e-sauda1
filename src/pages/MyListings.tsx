@@ -71,7 +71,7 @@ export default function MyListings() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
-      <Reveal className="flex items-center justify-between">
+      <Reveal contentClassName="flex items-center justify-between">
         <h1 className="font-display text-3xl font-semibold">My listings</h1>
         <Link to="/sell" className="rounded-full bg-forest px-5 py-2.5 text-sm font-semibold text-cream hover:bg-forest-light">
           + Sell something
@@ -93,7 +93,7 @@ export default function MyListings() {
           </div>
         ) : (
           listings.map((l) => (
-            <div key={l.id} className="flex items-center gap-4 rounded-xl2 border border-line/5 bg-surface p-4">
+            <div key={l.id} className="flex flex-wrap items-center gap-4 rounded-xl2 border border-line/5 bg-surface p-4">
               <Link
                 to={`/listing/${l.id}`}
                 className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg text-2xl ${l.bg}`}
@@ -115,7 +115,7 @@ export default function MyListings() {
                 </span>
               </div>
 
-              <div className="flex shrink-0 items-center gap-2">
+              <div className="flex w-full shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto">
                 {l.status === 'active' && (
                   <>
                     <Link

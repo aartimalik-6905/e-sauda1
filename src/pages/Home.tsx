@@ -300,7 +300,7 @@ export default function Home() {
 
       {/* Categories */}
       <section className="mx-auto max-w-7xl px-6 py-14">
-        <Reveal className="mb-8 flex items-end justify-between">
+        <Reveal className="mb-8" contentClassName="flex items-end justify-between">
           <div>
             <p className="eyebrow">(Categories)</p>
             <h2 className="mt-2 font-display text-3xl font-extrabold text-ink">Shop by category</h2>
@@ -340,7 +340,7 @@ export default function Home() {
 
       {/* Fresh listings */}
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <Reveal className="mb-8 flex items-end justify-between">
+        <Reveal className="mb-8" contentClassName="flex items-end justify-between">
           <div>
             <p className="eyebrow">(Fresh in your city)</p>
             <h2 className="mt-2 font-display text-3xl font-extrabold text-ink">Real people, real items</h2>
@@ -374,7 +374,7 @@ export default function Home() {
           users who have actually saved something to base it on. */}
       {user && (recommendedLoading || recommended.length > 0) && (
         <section className="mx-auto max-w-7xl px-6 pt-16">
-          <Reveal className="mb-8 flex items-end justify-between">
+          <Reveal className="mb-8" contentClassName="flex items-end justify-between">
             <div>
               <p className="eyebrow">(Based on your wishlist)</p>
               <h2 className="mt-2 font-display text-3xl font-extrabold text-ink">Recommended for you</h2>
@@ -420,7 +420,7 @@ export default function Home() {
 
       {/* Feature grid */}
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <Reveal className="grid grid-cols-1 items-end gap-10 lg:grid-cols-2">
+        <Reveal contentClassName="grid grid-cols-1 items-end gap-10 lg:grid-cols-2">
           <div>
             <p className="eyebrow">(Why e-Sauda)</p>
             <h2 className="mt-4 font-display text-4xl font-extrabold leading-tight text-ink">

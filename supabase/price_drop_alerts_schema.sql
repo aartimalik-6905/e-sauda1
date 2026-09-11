@@ -8,11 +8,23 @@
 
 -- Widen the notifications.type check constraint again, same pattern as
 -- report_notify_schema.sql -- one more allowed value.
+--
+-- IMPORTANT: this constraint is shared with report_notify_schema.sql and
+-- meetup_schema.sql, each of which also drops-and-recreates it to add their own
+-- types. Since a plain `add constraint` always fully replaces the previous list
+-- (not merges with it), whichever of these three files runs *last* silently wins
+-- and narrows it back down to only the types *it* knows about -- e.g. running this
+-- file after meetup_schema.sql would break every meetup notification with a check
+-- constraint violation (visible as a 400 on the meetups insert/update). Fixed by
+-- always declaring the full, canonical list of every type used anywhere in the
+-- app here, not just the one this feature adds -- so this is safe to (re-)run in
+-- any order relative to the other two.
 alter table public.notifications drop constraint if exists notifications_type_check;
 alter table public.notifications add constraint notifications_type_check check (
   type in (
     'message', 'vault_funded', 'vault_completed', 'vault_cancelled',
-    'report_reviewed', 'report_dismissed', 'price_drop'
+    'report_reviewed', 'report_dismissed', 'price_drop',
+    'meetup_proposed', 'meetup_confirmed', 'meetup_cancelled'
   )
 );
 

@@ -1,13 +1,45 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, MapPin, X } from "lucide-react";
 import { categories } from "../data/listings";
+import { INDIA_CITIES } from "../data/indiaCities";
 import { Category, Listing } from "../types";
 import { fetchListings } from "../lib/listings";
 import { useSavedListings } from "../hooks/useSavedListings";
+import { useUserLocation } from "../hooks/useUserLocation";
+import { haversineKm } from "../lib/distance";
 import ListingCard from "../components/ListingCard";
 
 const tabs: ("All" | Category)[] = ["All", ...categories.map((c) => c.name)];
+
+// A handful of major metros shown by default when the city box is focused but
+// empty -- so clicking into it isn't a dead end before you've typed anything.
+const POPULAR_CITIES = [
+  "Mumbai", "Delhi", "Bengaluru", "Hyderabad", "Ahmedabad", "Chennai",
+  "Kolkata", "Pune", "Jaipur", "Lucknow", "Surat", "Chandigarh",
+]
+
+// Client-side, offline city search over the bundled INDIA_CITIES list -- see that
+// file for why this isn't a live geocoder call: nominatim.openstreetmap.org (used
+// elsewhere in this app for one-off lookups) is a shared demo service that rate-
+// limits to 1 request/second and silently blocks anyone who exceeds that, which a
+// "suggest as you type" box firing on every keystroke does almost immediately. This
+// runs entirely in the browser instead -- instant, no network call, no rate limit,
+// and it covers every one of the 3,375 bundled Indian cities/towns, not just
+// whatever a geocoder happens to return for a given query.
+function searchIndiaCities(query: string, limit = 8): string[] {
+  const q = query.trim().toLowerCase();
+  if (q.length < 1) return POPULAR_CITIES;
+  const startsWith: string[] = [];
+  const contains: string[] = [];
+  for (const [name] of INDIA_CITIES) {
+    const lower = name.toLowerCase();
+    if (lower.startsWith(q)) startsWith.push(name);
+    else if (lower.includes(q)) contains.push(name);
+    if (startsWith.length >= limit) break;
+  }
+  return [...startsWith, ...contains].slice(0, limit);
+}
 
 export default function Browse() {
   const { savedIds, toggleSaved } = useSavedListings();
@@ -17,7 +49,16 @@ export default function Browse() {
   );
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
-  const [city, setCity] = useState("All cities");
+  // `city` is the applied filter (what actually gets sent to fetchListings, debounced
+  // from cityInput below); empty string means no city filter ("All cities"). Free-text
+  // instead of a fixed dropdown so any city/town/area works, not just a hardcoded
+  // handful of metros -- the backend already does a partial (ilike) match against the
+  // listing's location text, so this needed no backend changes, just a better input.
+  const [city, setCity] = useState("");
+  const [cityInput, setCityInput] = useState("");
+  const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false);
+  const cityBoxRef = useRef<HTMLDivElement>(null);
   const [sort, setSort] = useState("Relevance");
   const [searchInput, setSearchInput] = useState(params.get("q") || "");
   const [search, setSearch] = useState(params.get("q") || "");
@@ -31,6 +72,42 @@ export default function Browse() {
     const timeout = setTimeout(() => setSearch(searchInput), 350);
     return () => clearTimeout(timeout);
   }, [searchInput]);
+
+  // Debounce typing so the *filter* (city -> fetchListings) doesn't fire on every
+  // keystroke -- the suggestion list itself is instant/local (see searchIndiaCities
+  // above) so it doesn't need this delay, but it's cheap enough to just piggyback
+  // on the same effect rather than run two separate ones.
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setCity(cityInput.trim());
+    }, 350);
+    setCitySuggestions(searchIndiaCities(cityInput));
+    return () => clearTimeout(timeout);
+  }, [cityInput]);
+
+  // Close the suggestions dropdown on an outside click.
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (cityBoxRef.current && !cityBoxRef.current.contains(e.target as Node)) {
+        setShowCitySuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  function pickCity(value: string) {
+    setCityInput(value);
+    setCity(value);
+    setCitySuggestions([]);
+    setShowCitySuggestions(false);
+  }
+
+  function clearCity() {
+    setCityInput("");
+    setCity("");
+    setCitySuggestions([]);
+  }
 
   // Keeps the URL bookmarkable/shareable (e.g. the navbar's search box links here
   // with ?q=...) without fighting the debounce above.
@@ -55,7 +132,7 @@ export default function Browse() {
       minPrice: min ? Number(min) : undefined,
       maxPrice: max ? Number(max) : undefined,
       search,
-      city: city !== "All cities" ? city : undefined,
+      city: city || undefined,
     })
       .then((data) => {
         if (!cancelled) setListings(data);
@@ -71,16 +148,27 @@ export default function Browse() {
     };
   }, [active, min, max, search, city]);
 
+  // Real distance from the buyer's live location, not the stored distance_km column
+  // (which is never anything but its default 0 -- see lib/listings.ts). Without this,
+  // "Nearest first" was sorting on a value that's identical for every listing and
+  // doing nothing.
+  const { coords: myCoords } = useUserLocation();
+
   const filtered = useMemo(() => {
     let result = listings;
     if (sort === "Price: Low to High")
       result = [...result].sort((a, b) => a.price - b.price);
     if (sort === "Price: High to Low")
       result = [...result].sort((a, b) => b.price - a.price);
-    if (sort === "Nearest first")
-      result = [...result].sort((a, b) => a.distanceKm - b.distanceKm);
+    if (sort === "Nearest first" && myCoords) {
+      const distanceOf = (l: Listing) =>
+        l.latitude != null && l.longitude != null
+          ? haversineKm(myCoords, { lat: l.latitude, lng: l.longitude })
+          : Infinity; // unknown location sorts last, not first
+      result = [...result].sort((a, b) => distanceOf(a) - distanceOf(b));
+    }
     return result;
-  }, [listings, sort]);
+  }, [listings, sort, myCoords]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
@@ -119,20 +207,52 @@ export default function Browse() {
             </div>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-5" ref={cityBoxRef}>
             <label className="text-xs font-semibold uppercase tracking-wide text-ink/50">
               City
             </label>
-            <select
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="mt-2 w-full rounded-lg border border-line/10 bg-surface px-3 py-2 text-sm"
-            >
-              <option>All cities</option>
-              <option>Bengaluru</option>
-              <option>Mumbai</option>
-              <option>Delhi NCR</option>
-            </select>
+            <div className="relative mt-2">
+              <div className="flex items-center gap-2 rounded-lg border border-line/10 px-3 py-2">
+                <MapPin size={16} className="shrink-0 text-ink/40" />
+                <input
+                  value={cityInput}
+                  onChange={(e) => {
+                    setCityInput(e.target.value);
+                    setShowCitySuggestions(true);
+                  }}
+                  onFocus={() => setShowCitySuggestions(true)}
+                  placeholder="Any city, town, or area"
+                  className="w-full bg-transparent text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+                />
+                {cityInput && (
+                  <button
+                    onClick={clearCity}
+                    aria-label="Clear city filter"
+                    className="shrink-0 text-ink/40 hover:text-ink"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+              {showCitySuggestions && citySuggestions.length > 0 && (
+                <ul className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-line/10 bg-surface shadow-lg">
+                  {citySuggestions.map((c) => (
+                    <li key={c}>
+                      <button
+                        onClick={() => pickCity(c)}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-ink hover:bg-cream-dark"
+                      >
+                        <MapPin size={13} className="shrink-0 text-ink/40" />
+                        {c}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <p className="mt-1.5 text-[11px] text-ink/40">
+              Type any city or town, or pick from the list. Leave blank to see listings from everywhere.
+            </p>
           </div>
 
           <div className="mt-5">

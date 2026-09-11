@@ -145,8 +145,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error ? error.message : null }
   }
 
+  // Clears local session/profile state immediately rather than waiting on Supabase's
+  // signOut() network round-trip to complete first. Previously this awaited
+  // supabase.auth.signOut() directly -- if that call was ever slow (flaky network,
+  // a sleepy auth server) or rejected outright, the awaiting caller (Navbar's
+  // handleSignOut) would never reach its own follow-up code, leaving the account
+  // menu open and the app looking "logged in" with no way to tell the sign-out was
+  // stuck, short of a hard refresh. Now the person is unambiguously logged out on
+  // this device the instant they click it, and the actual server-side session
+  // revoke happens in the background -- if it fails, the local session is already
+  // gone either way, so there's nothing the UI needs to wait on or show for it.
   async function signOut() {
-    await supabase.auth.signOut()
+    setSession(null)
+    setProfile(null)
+    supabase.auth.signOut().catch(() => {
+      // Local state is already cleared above -- a slow/broken/offline auth server
+      // isn't something the person needs to see or be blocked on.
+    })
   }
 
   // Supabase emails a link containing a recovery token; the link lands on

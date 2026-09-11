@@ -9,11 +9,23 @@
 -- The notifications table's `type` column has a fixed check constraint listing every
 -- allowed value -- widen it to include the two new types this feature adds. Default
 -- constraint naming for an inline column check is '<table>_<column>_check'.
+--
+-- IMPORTANT: this constraint is shared with price_drop_alerts_schema.sql and
+-- meetup_schema.sql, each of which also drops-and-recreates it to add their own
+-- types. A plain `add constraint` fully replaces the previous list rather than
+-- merging with it, so whichever of these three files runs *last* silently wins and
+-- narrows it back down to only the types *it* knows about -- e.g. running this file
+-- after meetup_schema.sql would break every meetup notification with a check
+-- constraint violation (visible as a 400 on the meetups insert/update). Fixed by
+-- always declaring the full, canonical list of every type used anywhere in the app
+-- here, not just the two this feature adds -- so this is safe to (re-)run in any
+-- order relative to the other two.
 alter table public.notifications drop constraint if exists notifications_type_check;
 alter table public.notifications add constraint notifications_type_check check (
   type in (
     'message', 'vault_funded', 'vault_completed', 'vault_cancelled',
-    'report_reviewed', 'report_dismissed'
+    'report_reviewed', 'report_dismissed', 'price_drop',
+    'meetup_proposed', 'meetup_confirmed', 'meetup_cancelled'
   )
 );
 

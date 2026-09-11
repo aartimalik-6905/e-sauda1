@@ -5,7 +5,8 @@ export default function Privacy() {
     <LegalLayout title="Privacy Policy" lastUpdated="July 19, 2026">
       <p>
         This Privacy Policy explains what information e-Sauda collects, why, and how
-        it's used. e-Sauda is operated by ANSHU YADAV ("we", "us").
+        it's used. e-Sauda is operated by ANSHU YADAV, a sole proprietorship
+        registered in India ("we", "us").
       </p>
 
       <h2>Information we collect</h2>
@@ -14,10 +15,11 @@ export default function Privacy() {
         <li>Listings you post: title, description, price, category, condition, and photos.</li>
         <li>Messages you send to other users through e-Sauda's chat.</li>
         <li>
-          Payment information: when you buy something via Sauda Vault, your payment is
-          processed directly by Razorpay -- e-Sauda does not receive or store your
-          card, UPI, or bank details. We store only the transaction reference and
-          amount needed to confirm your order.
+          Payment information: when you buy something via Sauda Vault (or pay the
+          anti-bot listing fee described in our Pricing page), your payment is
+          processed directly by our third-party payment gateway partner -- e-Sauda
+          does not receive or store your card, UPI, or bank details. We store only
+          the transaction reference and amount needed to confirm your order.
         </li>
         <li>Ratings and reports you submit about other users or listings.</li>
         <li>Basic usage data (e.g. login times) needed to keep your account secure.</li>
@@ -34,10 +36,10 @@ export default function Privacy() {
 
       <h2>Who we share it with</h2>
       <p>
-        We share payment details with Razorpay solely to process your transaction,
-        governed by Razorpay's own privacy policy. We do not sell your personal
-        information to third parties. We may disclose information if required by law
-        or to protect the safety of our users.
+        We share payment details with our third-party payment gateway partner solely
+        to process your transaction, governed by that partner's own privacy policy.
+        We do not sell your personal information to third parties. We may disclose
+        information if required by law or to protect the safety of our users.
       </p>
 
       <h2>Reports and moderation privacy</h2>

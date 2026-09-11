@@ -129,7 +129,14 @@ function OrderHeader({ order }: { order: VaultOrder }) {
         )}
       </span>
       <div>
-        <p className="font-medium text-ink">{order.listingTitle || "Listing removed"}</p>
+        <p className="font-medium text-ink">
+          {order.listingTitle || "Listing removed"}
+          {order.listingRemoved && order.listingTitle && (
+            <span className="ml-1.5 rounded-full bg-ink/5 px-2 py-0.5 text-[10px] font-normal uppercase tracking-wide text-ink/40">
+              Removed
+            </span>
+          )}
+        </p>
         <p className="text-sm text-ink/50">₹{order.amount.toLocaleString("en-IN")}</p>
       </div>
     </div>

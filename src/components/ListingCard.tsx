@@ -2,6 +2,8 @@ import { Heart, Lock, ImageOff } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Listing } from '../types'
+import { useUserLocation } from '../hooks/useUserLocation'
+import { haversineKm, formatDistanceKm } from '../lib/distance'
 
 interface ListingCardProps {
   listing: Listing
@@ -13,6 +15,18 @@ export default function ListingCard({ listing, saved: savedProp, onToggleSaved }
   const [localSaved, setLocalSaved] = useState(false)
   const controlled = onToggleSaved !== undefined
   const saved = controlled ? !!savedProp : localSaved
+
+  // Real distance from wherever the buyer actually is right now, computed
+  // client-side from the listing's geocoded coordinates -- not the stored
+  // distance_km column, which is never anything but its default 0 (nothing in the
+  // app ever writes to it; see lib/listings.ts's mapRow). Silently omitted (falls
+  // back to just the location text) if either the listing has no coordinates yet
+  // or the buyer hasn't granted/has denied location access.
+  const { coords } = useUserLocation()
+  const distanceLabel =
+    coords && listing.latitude != null && listing.longitude != null
+      ? formatDistanceKm(haversineKm(coords, { lat: listing.latitude, lng: listing.longitude }))
+      : null
 
   return (
     <Link
@@ -60,7 +74,8 @@ export default function ListingCard({ listing, saved: savedProp, onToggleSaved }
         </div>
         <p className="mt-1 truncate text-sm text-ink/80">{listing.title}</p>
         <p className="mt-1 text-xs text-ink/50">
-          {listing.location} · {listing.distanceKm}km
+          {listing.location}
+          {distanceLabel && ` · ${distanceLabel} away`}
         </p>
       </div>
     </Link>

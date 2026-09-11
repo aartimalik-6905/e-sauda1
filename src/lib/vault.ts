@@ -18,9 +18,22 @@ function mapRow(row: any): VaultOrder {
     deductedFee: Number(row.deducted_fee ?? 0),
     refundProcessedAt: row.refund_processed_at ?? null,
     razorpayPaymentId: row.razorpay_payment_id ?? null,
-    listingTitle: row.listings?.title,
-    listingEmoji: row.listings?.emoji,
-    listingPhotoUrl: row.listings?.photo_urls?.[0] ?? null,
+    // Prefer the live listing (so an edited title/photo shows up immediately);
+    // fall back to the purchase-time snapshot for the rare case the live join comes
+    // back null (see vault_listing_snapshot_schema.sql for why that could still
+    // happen even with the RLS fix -- e.g. this row predates the backfill).
+    listingTitle: row.listings?.title ?? row.listing_title_snapshot ?? undefined,
+    listingEmoji: row.listings?.emoji ?? row.listing_emoji_snapshot ?? undefined,
+    listingPhotoUrl: row.listings?.photo_urls?.[0] ?? row.listing_photo_url_snapshot ?? null,
+    // Only ever comes from the live listing -- there's no snapshot column for this
+    // one (it's shown alongside the title/photo, which do have snapshots, but isn't
+    // essential enough on its own to warrant a schema change; if the live listing
+    // is ever genuinely gone this just doesn't render on the receipt).
+    listingLocation: row.listings?.location ?? null,
+    // True only when the listing itself is actually gone from the buyer/seller's
+    // reach (moderator-removed, or the live row is otherwise unavailable) -- not
+    // merely 'sold', which is the normal end state for a completed purchase.
+    listingRemoved: row.listings == null || row.listings?.status === 'removed',
   }
 }
 
@@ -87,7 +100,7 @@ export async function cancelVaultOrder(orderId: string, reason: string): Promise
 // it is revoked for every client role in vault_schema.sql, so even asking for it here
 // would just error. Only the RPC functions above can read or write it.
 const SELECT_COLUMNS =
-  'id, listing_id, buyer_id, seller_id, amount, status, created_at, completed_at, cancelled_at, cancel_reason, refund_amount, deducted_fee, refund_processed_at, razorpay_payment_id, listings(title, emoji, photo_urls)'
+  'id, listing_id, buyer_id, seller_id, amount, status, created_at, completed_at, cancelled_at, cancel_reason, refund_amount, deducted_fee, refund_processed_at, razorpay_payment_id, listing_title_snapshot, listing_emoji_snapshot, listing_photo_url_snapshot, listings(title, emoji, photo_urls, status, location)'
 
 export async function fetchMyPurchases(userId: string): Promise<VaultOrder[]> {
   const { data, error } = await supabase
