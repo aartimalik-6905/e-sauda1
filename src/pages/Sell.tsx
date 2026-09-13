@@ -18,10 +18,12 @@ import { payListingFee } from "../lib/listingFee";
 import { suggestPrice, PriceSuggestion } from "../lib/pricing";
 import { Category } from "../types";
 import { useAuth } from "../context/AuthContext";
-import { Upload, Video, Check, X, MapPin } from "lucide-react";
+import { Upload, Video, Check, X, MapPin, Pencil } from "lucide-react";
 import { categoryIcons } from "../lib/categoryIcons";
 import { geocodeLocation, GeoPoint } from "../lib/geocoding";
 import ListingMap from "../components/ListingMap";
+import PhotoEditorModal from "../components/PhotoEditorModal";
+import VideoEditorModal from "../components/VideoEditorModal";
 
 const stepNames = ["Category", "Details", "Media", "Review"];
 const LISTING_CAP_PER_CATEGORY = 2; // matches the flat cap new users start with; grows with trust score later
@@ -55,6 +57,27 @@ export default function Sell() {
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [priceSuggestion, setPriceSuggestion] = useState<PriceSuggestion | null>(null);
   const [priceSuggestionLoading, setPriceSuggestionLoading] = useState(false);
+
+  // Newly picked photos go through the crop/rotate editor one at a time before
+  // landing in photoFiles -- pendingPhotoQueue holds the rest while editingNewPhoto
+  // is the one currently open in the modal. editingExistingPhotoIndex lets someone
+  // reopen the editor for a photo they already added, from its thumbnail.
+  const [pendingPhotoQueue, setPendingPhotoQueue] = useState<File[]>([]);
+  const [editingNewPhoto, setEditingNewPhoto] = useState<File | null>(null);
+  const [editingExistingPhotoIndex, setEditingExistingPhotoIndex] = useState<number | null>(null);
+  const [editingVideo, setEditingVideo] = useState(false);
+
+  useEffect(() => {
+    if (!editingNewPhoto && pendingPhotoQueue.length > 0) {
+      setEditingNewPhoto(pendingPhotoQueue[0]);
+      setPendingPhotoQueue((q) => q.slice(1));
+    }
+  }, [editingNewPhoto, pendingPhotoQueue]);
+
+  function finishEditingNewPhoto(file: File) {
+    setPhotoFiles((prev) => [...prev, file]);
+    setEditingNewPhoto(null);
+  }
 
   // Resolved from `city` (the free-text location field below) so the listing
   // can show a real map pin on ListingDetail. Debounced the same way the
@@ -96,6 +119,7 @@ export default function Sell() {
 
   function onFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const chosen = Array.from(e.target.files ?? []);
+    e.target.value = ""; // allow re-selecting the same file after removing it
     if (chosen.length === 0) return;
     const combined = [...photoFiles, ...chosen];
     const error = validatePhotoFiles(combined);
@@ -104,8 +128,9 @@ export default function Sell() {
       return;
     }
     setPhotoError(null);
-    setPhotoFiles(combined);
-    e.target.value = ""; // allow re-selecting the same file after removing it
+    // Queue the newly picked files for the crop/rotate editor, one at a time,
+    // instead of adding them straight to photoFiles.
+    setPendingPhotoQueue((q) => [...q, ...chosen]);
   }
 
   function removePhoto(index: number) {
@@ -143,6 +168,7 @@ export default function Sell() {
         return;
       }
       setVideoFile(file);
+      setEditingVideo(true); // offer trim/mute right away, before it's locked in
     } finally {
       setCheckingVideo(false);
     }
@@ -568,6 +594,14 @@ export default function Sell() {
                   />
                   <button
                     type="button"
+                    onClick={() => setEditingExistingPhotoIndex(i)}
+                    className="absolute left-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
+                    aria-label="Edit photo"
+                  >
+                    <Pencil size={12} />
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => removePhoto(i)}
                     className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
                     aria-label="Remove photo"
@@ -610,6 +644,14 @@ export default function Sell() {
             {videoPreviewUrl ? (
               <div className="group relative mt-4 aspect-video w-full max-w-sm overflow-hidden rounded-xl2 bg-black">
                 <video src={videoPreviewUrl} controls className="h-full w-full" />
+                <button
+                  type="button"
+                  onClick={() => setEditingVideo(true)}
+                  className="absolute left-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
+                  aria-label="Edit video"
+                >
+                  <Pencil size={12} />
+                </button>
                 <button
                   type="button"
                   onClick={removeVideo}
@@ -715,6 +757,36 @@ export default function Sell() {
           </button>
         )}
       </div>
+
+      {editingNewPhoto && (
+        <PhotoEditorModal
+          file={editingNewPhoto}
+          onSave={finishEditingNewPhoto}
+          onCancel={() => finishEditingNewPhoto(editingNewPhoto)}
+        />
+      )}
+      {editingExistingPhotoIndex !== null && (
+        <PhotoEditorModal
+          file={photoFiles[editingExistingPhotoIndex]}
+          onCancel={() => setEditingExistingPhotoIndex(null)}
+          onSave={(edited) => {
+            setPhotoFiles((prev) =>
+              prev.map((f, i) => (i === editingExistingPhotoIndex ? edited : f)),
+            );
+            setEditingExistingPhotoIndex(null);
+          }}
+        />
+      )}
+      {editingVideo && videoFile && (
+        <VideoEditorModal
+          file={videoFile}
+          onCancel={() => setEditingVideo(false)}
+          onSave={(edited) => {
+            setVideoFile(edited);
+            setEditingVideo(false);
+          }}
+        />
+      )}
     </div>
   );
 }

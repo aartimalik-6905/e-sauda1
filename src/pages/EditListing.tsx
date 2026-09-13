@@ -1,6 +1,8 @@
 import { useEffect, useState, FormEvent } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { X, Upload, Video } from 'lucide-react'
+import { X, Upload, Video, Pencil } from 'lucide-react'
+import PhotoEditorModal from '../components/PhotoEditorModal'
+import VideoEditorModal from '../components/VideoEditorModal'
 import { fetchListingById, updateListing, updateListingPhotos, updateListingVideo } from '../lib/listings'
 import { geocodeLocation, GeoPoint } from '../lib/geocoding'
 import ListingMap from '../components/ListingMap'
@@ -50,6 +52,31 @@ export default function EditListing() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [videoError, setVideoError] = useState<string | null>(null)
   const [savingVideo, setSavingVideo] = useState(false)
+
+  // Newly picked photos go through the crop/rotate editor one at a time before
+  // upload -- newPhotoQueue holds the rest while editingNewPhoto is the one
+  // currently open in the modal.
+  const [newPhotoQueue, setNewPhotoQueue] = useState<File[]>([])
+  const [editingNewPhoto, setEditingNewPhoto] = useState<File | null>(null)
+
+  // Re-editing a photo that's already uploaded: it has to be fetched back into a
+  // File first (the editor works on File objects, not remote URLs).
+  const [editingExistingPhotoUrl, setEditingExistingPhotoUrl] = useState<string | null>(null)
+  const [existingPhotoFile, setExistingPhotoFile] = useState<File | null>(null)
+  const [loadingPhotoForEdit, setLoadingPhotoForEdit] = useState(false)
+
+  // Video editor: used both for a newly picked file and for re-editing the video
+  // already on the listing (fetched back into a File the same way as photos above).
+  const [editingVideo, setEditingVideo] = useState(false)
+  const [videoFileForEditor, setVideoFileForEditor] = useState<File | null>(null)
+  const [loadingVideoForEdit, setLoadingVideoForEdit] = useState(false)
+
+  useEffect(() => {
+    if (!editingNewPhoto && newPhotoQueue.length > 0) {
+      setEditingNewPhoto(newPhotoQueue[0])
+      setNewPhotoQueue((q) => q.slice(1))
+    }
+  }, [editingNewPhoto, newPhotoQueue])
 
   const [geo, setGeo] = useState<GeoPoint | null>(null)
   const [geocoding, setGeocoding] = useState(false)
@@ -129,7 +156,7 @@ export default function EditListing() {
     }
   }
 
-  async function handleAddPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleAddPhotos(e: React.ChangeEvent<HTMLInputElement>) {
     if (!id || !user) return
     const files = Array.from(e.target.files || [])
     e.target.value = '' // lets picking the same file again re-trigger onChange
@@ -145,15 +172,59 @@ export default function EditListing() {
       setPhotoError(fileValidationError)
       return
     }
+    // Queue for the crop/rotate editor rather than uploading straight away --
+    // uploadSingleNewPhoto below runs once each one is confirmed (or skipped).
+    setNewPhotoQueue((q) => [...q, ...files])
+  }
 
+  async function uploadSingleNewPhoto(file: File) {
+    if (!id || !user) return
     setUploadingPhotos(true)
+    setPhotoError(null)
     try {
-      const newUrls = await uploadListingPhotos(user.id, id, files, photos.length)
-      const next = [...photos, ...newUrls]
+      const [url] = await uploadListingPhotos(user.id, id, [file], photos.length)
+      const next = [...photos, url]
       await updateListingPhotos(id, next)
       setPhotos(next)
     } catch (err: any) {
-      setPhotoError(err.message || 'Could not upload those photos.')
+      setPhotoError(err.message || 'Could not upload that photo.')
+    } finally {
+      setUploadingPhotos(false)
+    }
+  }
+
+  async function startEditingExistingPhoto(url: string) {
+    setEditingExistingPhotoUrl(url)
+    setLoadingPhotoForEdit(true)
+    setPhotoError(null)
+    try {
+      const res = await fetch(url)
+      const blob = await res.blob()
+      const filename = url.split('/').pop()?.split('?')[0] || 'photo.jpg'
+      setExistingPhotoFile(new File([blob], filename, { type: blob.type || 'image/jpeg' }))
+    } catch {
+      setPhotoError('Could not load that photo for editing.')
+      setEditingExistingPhotoUrl(null)
+    } finally {
+      setLoadingPhotoForEdit(false)
+    }
+  }
+
+  async function handleSaveEditedExistingPhoto(edited: File) {
+    const oldUrl = editingExistingPhotoUrl
+    setEditingExistingPhotoUrl(null)
+    setExistingPhotoFile(null)
+    if (!id || !user || !oldUrl) return
+    setUploadingPhotos(true)
+    setPhotoError(null)
+    try {
+      const [newUrl] = await uploadListingPhotos(user.id, id, [edited], photos.length)
+      const next = photos.map((p) => (p === oldUrl ? newUrl : p))
+      await updateListingPhotos(id, next)
+      setPhotos(next)
+      await deleteListingPhotoByUrl(oldUrl)
+    } catch (err: any) {
+      setPhotoError(err.message || 'Could not save the edited photo.')
     } finally {
       setUploadingPhotos(false)
     }
@@ -176,8 +247,35 @@ export default function EditListing() {
       setVideoError(durationError)
       return
     }
+    // Offer trim/mute before it's uploaded, rather than uploading immediately.
+    setVideoFileForEditor(file)
+    setEditingVideo(true)
+  }
 
+  async function startEditingExistingVideo() {
+    if (!videoUrl) return
+    setEditingVideo(true)
+    setLoadingVideoForEdit(true)
+    setVideoError(null)
+    try {
+      const res = await fetch(videoUrl)
+      const blob = await res.blob()
+      const filename = videoUrl.split('/').pop()?.split('?')[0] || 'video.mp4'
+      setVideoFileForEditor(new File([blob], filename, { type: blob.type || 'video/mp4' }))
+    } catch {
+      setVideoError('Could not load the video for editing.')
+      setEditingVideo(false)
+    } finally {
+      setLoadingVideoForEdit(false)
+    }
+  }
+
+  async function handleSaveEditedVideo(file: File) {
+    setEditingVideo(false)
+    setVideoFileForEditor(null)
+    if (!id || !user) return
     setSavingVideo(true)
+    setVideoError(null)
     try {
       // Old file, if any, is left in storage rather than deleted-then-replaced --
       // uploadListingVideo uses upsert on the same path (derived from the filename),
@@ -304,6 +402,15 @@ export default function EditListing() {
               <img src={url} alt="" className="h-full w-full object-cover" />
               <button
                 type="button"
+                onClick={() => startEditingExistingPhoto(url)}
+                disabled={removingUrl === url}
+                className="absolute left-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 disabled:opacity-50"
+                aria-label="Edit photo"
+              >
+                <Pencil size={12} />
+              </button>
+              <button
+                type="button"
                 onClick={() => handleRemovePhoto(url)}
                 disabled={removingUrl === url}
                 className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 disabled:opacity-50"
@@ -342,6 +449,15 @@ export default function EditListing() {
         {videoUrl ? (
           <div className="group relative mt-3 aspect-video w-full max-w-sm overflow-hidden rounded-xl2 bg-black">
             <video src={videoUrl} controls className="h-full w-full" />
+            <button
+              type="button"
+              onClick={startEditingExistingVideo}
+              disabled={savingVideo}
+              className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 disabled:opacity-50"
+              aria-label="Edit video"
+            >
+              <Pencil size={13} />
+            </button>
             <button
               type="button"
               onClick={handleRemoveVideo}
@@ -445,6 +561,51 @@ export default function EditListing() {
           {saving ? 'Saving…' : 'Save changes'}
         </button>
       </form>
+
+      {editingNewPhoto && (
+        <PhotoEditorModal
+          file={editingNewPhoto}
+          onSave={(edited) => {
+            setEditingNewPhoto(null)
+            uploadSingleNewPhoto(edited)
+          }}
+          onCancel={() => {
+            const original = editingNewPhoto
+            setEditingNewPhoto(null)
+            uploadSingleNewPhoto(original)
+          }}
+        />
+      )}
+      {editingExistingPhotoUrl && existingPhotoFile && (
+        <PhotoEditorModal
+          file={existingPhotoFile}
+          onSave={handleSaveEditedExistingPhoto}
+          onCancel={() => {
+            setEditingExistingPhotoUrl(null)
+            setExistingPhotoFile(null)
+          }}
+        />
+      )}
+      {editingExistingPhotoUrl && loadingPhotoForEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <p className="text-sm text-white">Loading photo…</p>
+        </div>
+      )}
+      {editingVideo && videoFileForEditor && (
+        <VideoEditorModal
+          file={videoFileForEditor}
+          onSave={handleSaveEditedVideo}
+          onCancel={() => {
+            setEditingVideo(false)
+            setVideoFileForEditor(null)
+          }}
+        />
+      )}
+      {editingVideo && !videoFileForEditor && loadingVideoForEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <p className="text-sm text-white">Loading video…</p>
+        </div>
+      )}
     </div>
   )
 }
