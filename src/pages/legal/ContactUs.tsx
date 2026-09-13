@@ -16,7 +16,7 @@ export default function ContactUs() {
       <p>9817116312 -- available Mon-Sat, 10am-6pm IST.</p>
 
       <h2>Registered address</h2>
-      <p>GPRA TYPE-2 QUARTERS, SAROJINI NAGAR</p>
+      <p>RZF-371 A, AMBEDKAR MARG, RAJ NAGAR PART 2, PALAM, NEW DELHI</p>
 
       <h2>For order-specific issues</h2>
       <p>
