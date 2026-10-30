@@ -38,16 +38,16 @@ const vaultSlides: SpotlightSlide[] = [
 const features = [
   { icon: Lock, title: "Vaulted escrow, always", desc: "Buyer's money sits in a digital vault. Handover OTP unlocks only when 'FUNDS SECURED' shows on your dashboard." },
   { icon: ShieldCheck, title: "Progressive trust limits", desc: "New users list 1–2 items. Great ratings unlock more. Bulk resellers stay filtered out — by design." },
-  { icon: Truck, title: "One-tap city delivery", desc: "Rapido, Uber & Dunzo baked into checkout. Price, ETA and rider — all locked in one tap." },
+  { icon: Truck, title: "Local handover", desc: "Meet nearby, inspect the item, then share the one-time code. Optional delivery estimates are indicative only." },
   { icon: Sparkles, title: "AI-cleaned photos", desc: "Snap it messy. We segment the background, block stock-photo scams and suggest a fair price." },
 ];
 
 const heroIcons = [Bike, Armchair, Snowflake, Keyboard];
 
 const handoverSteps = [
-  { title: "Enfield handover in 32 min", sub: "Rapido rider assigned · ETA 6 min" },
-  { title: "Enfield handover in 24 min", sub: "Rider en route · ETA 3 min" },
-  { title: "Enfield handover in 18 min", sub: "Rider arriving · Confirm on OTP screen" },
+  { title: "Enfield handover in 32 min", sub: "Meetup scheduled · ETA 6 min" },
+  { title: "Enfield handover in 24 min", sub: "Seller on the way · ETA 3 min" },
+  { title: "Enfield handover in 18 min", sub: "Seller arriving · Confirm on OTP screen" },
 ];
 
 // Rotates through the headline facts one at a time, right in the hero, so
@@ -55,8 +55,8 @@ const handoverSteps = [
 // living further down the page behind a scroll.
 const tickerFacts = [
   { icon: Lock, text: "Buyer's money sits in escrow until you're both ready" },
-  { icon: ShieldCheck, text: "Every seller is DigiLocker-verified" },
-  { icon: Truck, text: "Same-day city delivery, price locked in one tap" },
+  { icon: ShieldCheck, text: "Sellers complete identity (KYC) checks before payouts" },
+  { icon: Truck, text: "Meet locally and confirm handover with a one-time code" },
   { icon: Sparkles, text: "AI cleans up your listing photos automatically" },
 ];
 
@@ -214,9 +214,9 @@ export default function Home() {
           className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-xl2 border border-line/10 bg-line/10 sm:grid-cols-3"
         >
           {[
-            ["₹42 Cr", "Vaulted last month"],
-            ["2.1 M", "Verified sellers"],
-            ["4.8★", "Buyer rating"],
+            ["Escrow", "On every purchase"],
+            ["OTP", "Confirmed handover"],
+            ["₹ INR", "Transparent pricing"],
           ].map(([n, l]) => (
             <div key={l} className="bg-surface px-8 py-8 transition-colors duration-200 hover:bg-cream-dark">
               <p className="font-display text-4xl font-extrabold text-ink">{n}</p>
@@ -236,7 +236,7 @@ export default function Home() {
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute right-6 top-6 flex items-center gap-1.5 rounded-full bg-ink px-3 py-1.5 text-xs font-semibold text-cream-dark shadow-lg"
           >
-            <ShieldCheck size={14} className="text-clay" /> DigiLocker verified
+            <ShieldCheck size={14} className="text-clay" /> Escrow protected
           </motion.span>
           <div className="flex h-64 items-center justify-center gap-8">
             {heroIcons.map((Icon, i) => (
@@ -332,8 +332,8 @@ export default function Home() {
       <section className="border-y border-line/10 bg-cream-dark py-4">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-10 gap-y-2 px-6 eyebrow !text-ink/70">
           <span className="flex items-center gap-2"><Lock size={14} /> Escrow-vaulted payments</span>
-          <span className="flex items-center gap-2"><ShieldCheck size={14} /> DigiLocker-verified IDs</span>
-          <span className="flex items-center gap-2"><Truck size={14} /> Rapido · Uber · Dunzo delivery</span>
+          <span className="flex items-center gap-2"><ShieldCheck size={14} /> Seller KYC before payouts</span>
+          <span className="flex items-center gap-2"><Truck size={14} /> In-person handover with OTP</span>
           <span className="flex items-center gap-2"><Sparkles size={14} /> Two-way accountability score</span>
         </div>
       </section>

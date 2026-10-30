@@ -29,6 +29,8 @@ const ShippingPolicy = lazy(() => import('./pages/legal/ShippingPolicy'))
 const ContactUs = lazy(() => import('./pages/legal/ContactUs'))
 const AboutUs = lazy(() => import('./pages/legal/AboutUs'))
 const Pricing = lazy(() => import('./pages/legal/Pricing'))
+const CancellationPolicy = lazy(() => import('./pages/legal/CancellationPolicy'))
+const SellerOnboarding = lazy(() => import('./pages/legal/SellerOnboarding'))
 const Signup = lazy(() => import('./pages/Signup'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
@@ -76,6 +78,8 @@ function AnimatedRoutes() {
         <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
         <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
         <Route path="/refund-policy" element={<PageTransition><RefundPolicy /></PageTransition>} />
+        <Route path="/cancellation-policy" element={<PageTransition><CancellationPolicy /></PageTransition>} />
+        <Route path="/seller-onboarding" element={<PageTransition><SellerOnboarding /></PageTransition>} />
         <Route path="/shipping-policy" element={<PageTransition><ShippingPolicy /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><ContactUs /></PageTransition>} />
         <Route path="/about" element={<PageTransition><AboutUs /></PageTransition>} />

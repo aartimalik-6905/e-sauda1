@@ -2,7 +2,7 @@ import LegalLayout from '../../components/LegalLayout'
 
 export default function ShippingPolicy() {
   return (
-    <LegalLayout title="Shipping Policy" lastUpdated="July 19, 2026">
+    <LegalLayout title="Shipping Policy" lastUpdated="October 30, 2026">
       <p>
         e-Sauda is a local marketplace built around in-person exchange, not
         warehouse-to-doorstep shipping. This policy explains how items actually change
@@ -37,7 +37,7 @@ export default function ShippingPolicy() {
         partner is arranged for an order, that partner's fee (shown before you confirm)
         is the only delivery-related cost, and is deducted from any refund only if the
         delivery had already been arranged at the time of cancellation -- see our
-        Cancellation and Refunds Policy.
+        Cancellation Policy and Return and Refund Policy.
       </p>
 
       <h2>Lost or damaged items</h2>

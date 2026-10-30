@@ -1,69 +1,71 @@
+import { Link } from 'react-router-dom'
 import LegalLayout from '../../components/LegalLayout'
 
 export default function RefundPolicy() {
   return (
-    <LegalLayout title="Cancellation and Refunds Policy" lastUpdated="July 19, 2026">
+    <LegalLayout title="Return and Refund Policy" lastUpdated="October 30, 2026">
       <p>
-        This policy explains when and how refunds are issued for purchases made
-        through Sauda Vault, e-Sauda's escrow-based payment system.
+        This policy explains returns and refunds for purchases made through Sauda
+        Vault, e-Sauda's escrow-based payment system. e-Sauda is a marketplace;
+        items are sold by individual sellers.
       </p>
 
       <h2>How Sauda Vault payments work</h2>
       <p>
-        When you buy a listing, your payment is collected upfront and held in escrow.
-        It is released to the seller only once you confirm you've received the item,
-        using a one-time handover code. Your payment is not released to the seller
-        before that confirmation.
+        Your payment is collected upfront and held in escrow. It is released to the
+        seller only after you inspect the item and confirm handover using a
+        one-time code.
       </p>
 
-      <h2>Cancelling before handover</h2>
+      <h2>Returns</h2>
       <p>
-        Either the buyer or the seller may cancel a Vault order at any point before
-        handover is confirmed. Cancelling immediately returns the listing to active
-        status and initiates a refund to the original payment method.
+        Inspect the item at handover <strong>before</strong> sharing the one-time
+        code. If the item is not as described, do not share the code; cancel the
+        order for a full refund instead. Once the code is shared and handover is
+        confirmed, the sale is final and the item cannot be returned through
+        e-Sauda.
       </p>
 
-      <h2>Refund timeline</h2>
+      <h2>Refund mode</h2>
       <p>
-        Refunds are initiated automatically and immediately when an order is
-        cancelled. Once initiated, funds typically reach your original payment method
-        (card, UPI, or bank account) within <strong>5-7 business days</strong>,
-        depending on your bank or payment provider's own processing time. This is
-        standard for how Indian banks and UPI process refunds, and is not something
-        e-Sauda controls once the refund has been sent.
+        Refunds are always paid back to the <strong>original payment method</strong>{' '}
+        (the card, UPI ID, or bank account used for the purchase). We do not issue
+        refunds in cash or to a different account.
+      </p>
+
+      <h2>Refund duration</h2>
+      <p>
+        A refund is initiated immediately when an order is cancelled before
+        handover. It typically reaches your account within{' '}
+        <strong>5-7 business days</strong>, depending on your bank or payment
+        provider.
       </p>
 
       <h2>Delivery fee deductions</h2>
       <p>
-        If a third-party delivery arrangement had already been made for an order
-        before it's cancelled, the associated delivery fee is deducted from the
-        refund, since that portion of the transaction cost was already incurred. The
-        exact refund amount is always shown on your order before and after
-        cancellation. If no delivery was arranged (e.g. an in-person handover was
-        planned instead), the full amount is refunded.
+        If a third-party delivery had already been arranged before cancellation,
+        that delivery fee is deducted from the refund. Otherwise the full amount is
+        refunded. The exact refund amount is shown on your order.
       </p>
 
-      <h2>After handover is confirmed</h2>
+      <h2>Disputes after handover</h2>
       <p>
-        Once you confirm handover using the one-time code, the transaction is
-        considered complete and funds are released to the seller. Orders cannot be
-        cancelled or refunded through Sauda Vault after this point. Any post-handover
-        disputes (e.g. item not as described) should be raised directly with the
-        seller, or reported to e-Sauda via the Report feature on the listing or seller
-        profile for review.
+        If an item was misrepresented, report it within <strong>48 hours</strong> of
+        handover using the Report feature on the listing or seller profile. Our team
+        reviews reports within <strong>5 business days</strong> and may remove
+        listings or suspend accounts. Because payment has already been released to
+        the seller, any refund after handover is settled between buyer and seller.
       </p>
 
       <h2>Failed or delayed refunds</h2>
       <p>
-        In rare cases a refund may be delayed due to a processing error on our payment
-        processor's side. If your order shows as cancelled but you haven't received
-        your refund within 7 business days, contact us at edotsauda@gmail.com with
-        your order details and we'll investigate.
+        If your order shows as cancelled but you have not received your refund
+        within 7 business days, contact edotsauda@gmail.com with your order details.
       </p>
 
-      <h2>Contact</h2>
       <p>
-        For any question about a specific order's refund, contact edotsauda@gmail.com.
+        See also our{' '}
+        <Link to="/cancellation-policy" className="text-clay hover:underline">Cancellation Policy</Link>.
       </p>
     </LegalLayout>
   )

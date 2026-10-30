@@ -2,7 +2,7 @@ import LegalLayout from '../../components/LegalLayout'
 
 export default function Pricing() {
   return (
-    <LegalLayout title="Pricing" lastUpdated="July 19, 2026">
+    <LegalLayout title="Pricing" lastUpdated="October 30, 2026">
       <p>
         This page describes what e-Sauda currently charges, in plain terms, for both
         buyers and sellers.
@@ -38,7 +38,7 @@ export default function Pricing() {
       <p>
         If a Vault order is cancelled before handover, you're refunded in full, minus
         any delivery fee already incurred for that specific order. See our
-        Cancellation and Refunds Policy for the full timeline. The ₹1-₹25 anti-bot
+        Cancellation Policy and Return and Refund Policy for the full timeline. The ₹1-₹25 anti-bot
         listing fee is not refundable once a listing has been published, since it
         covers the act of posting itself rather than the sale.
       </p>

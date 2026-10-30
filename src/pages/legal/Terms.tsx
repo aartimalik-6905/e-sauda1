@@ -7,7 +7,7 @@ import LegalLayout from '../../components/LegalLayout'
 // activation step.
 export default function Terms() {
   return (
-    <LegalLayout title="Terms and Conditions" lastUpdated="July 19, 2026">
+    <LegalLayout title="Terms and Conditions" lastUpdated="October 30, 2026">
       <p>
         <strong>This website is operated by ANSHU YADAV</strong>, trading as
         e-Sauda ("we", "us", "the platform"), a sole proprietorship registered in
@@ -23,6 +23,14 @@ export default function Terms() {
         contract of sale is between the buyer and the seller.
       </p>
 
+      <h2>Sellers and KYC</h2>
+      <p>
+        Sellers must complete identity (KYC) verification before receiving payouts.
+        See our{' '}
+        <a href="/seller-onboarding" className="text-clay hover:underline">Seller Onboarding and KYC</a>{' '}
+        page. Providing false information may result in suspension and withheld payouts.
+      </p>
+
       <h2>Sauda Vault (escrow)</h2>
       <p>
         When a buyer purchases a listing through Sauda Vault, their payment is
@@ -34,7 +42,7 @@ export default function Terms() {
       <p>
         If a Vault order is cancelled before handover, the buyer's payment is refunded,
         minus any delivery fee already incurred if a delivery partner had already been
-        arranged for that order. See our Cancellation and Refunds Policy for full
+        arranged for that order. See our Cancellation Policy and Return and Refund Policy for full
         details and timelines.
       </p>
 

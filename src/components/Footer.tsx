@@ -59,7 +59,7 @@ export default function Footer() {
                   <HelpCircle size={14} /> Help guide — how e-Sauda works
                 </Link>
               </li>
-              <li>DigiLocker verification (coming soon)</li>
+              <li>DigiLocker verification (rolling out)</li>
               <li>OTP handover</li>
               <li>Chat moderation</li>
               <li>Report &amp; block</li>
@@ -71,15 +71,17 @@ export default function Footer() {
               <li><Link to="/about" className="hover:text-clay">About us</Link></li>
               <li><Link to="/terms" className="hover:text-clay">Terms and conditions</Link></li>
               <li><Link to="/privacy" className="hover:text-clay">Privacy policy</Link></li>
-              <li><Link to="/refund-policy" className="hover:text-clay">Cancellation &amp; refunds</Link></li>
+              <li><Link to="/refund-policy" className="hover:text-clay">Return &amp; refund policy</Link></li>
+              <li><Link to="/cancellation-policy" className="hover:text-clay">Cancellation policy</Link></li>
               <li><Link to="/shipping-policy" className="hover:text-clay">Shipping policy</Link></li>
+              <li><Link to="/seller-onboarding" className="hover:text-clay">Seller onboarding &amp; KYC</Link></li>
               <li><Link to="/pricing" className="hover:text-clay">Pricing</Link></li>
               <li><Link to="/contact" className="hover:text-clay">Contact us</Link></li>
             </ul>
           </div>
         </div>
         <p className="mt-14 border-t border-line/10 pt-6 text-xs text-ink/30">
-          © 2026 e-Sauda. <Link to="/terms" className="hover:text-clay">Terms</Link> · <Link to="/privacy" className="hover:text-clay">Privacy</Link> ·{' '}
+          © 2026 e-Sauda, operated by ANSHU YADAV. <Link to="/terms" className="hover:text-clay">Terms</Link> · <Link to="/privacy" className="hover:text-clay">Privacy</Link> ·{' '}
           <Link to="/help" className="hover:text-clay">Help guide</Link>
         </p>
       </div>

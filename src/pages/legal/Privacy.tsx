@@ -2,7 +2,7 @@ import LegalLayout from '../../components/LegalLayout'
 
 export default function Privacy() {
   return (
-    <LegalLayout title="Privacy Policy" lastUpdated="July 19, 2026">
+    <LegalLayout title="Privacy Policy" lastUpdated="October 30, 2026">
       <p>
         This Privacy Policy explains what information e-Sauda collects, why, and how
         it's used. e-Sauda is operated by ANSHU YADAV, a sole proprietorship
@@ -20,6 +20,11 @@ export default function Privacy() {
           processed directly by our third-party payment gateway partner -- e-Sauda
           does not receive or store your card, UPI, or bank details. We store only
           the transaction reference and amount needed to confirm your order.
+        </li>
+        <li>
+          Seller KYC information: identity document details, PAN, and bank/UPI payout
+          details, collected only from sellers to verify identity and send payouts.
+          These are never shown to other users.
         </li>
         <li>Ratings and reports you submit about other users or listings.</li>
         <li>Basic usage data (e.g. login times) needed to keep your account secure.</li>

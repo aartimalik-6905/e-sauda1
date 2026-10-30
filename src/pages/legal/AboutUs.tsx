@@ -2,7 +2,7 @@ import LegalLayout from '../../components/LegalLayout'
 
 export default function AboutUs() {
   return (
-    <LegalLayout title="About Us" lastUpdated="September 25, 2026">
+    <LegalLayout title="About Us" lastUpdated="October 30, 2026">
       <p>
         e-Sauda is a peer-to-peer local marketplace where individuals buy and sell
         directly with each other -- no warehouses, no middlemen, no drama. Whether
