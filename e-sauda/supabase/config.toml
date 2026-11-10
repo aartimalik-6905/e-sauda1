@@ -1,0 +1,2 @@
+[functions.cashfree-webhook]
+verify_jwt = false
